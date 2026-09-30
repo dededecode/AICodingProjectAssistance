@@ -1,0 +1,29 @@
+# Docker 构建上下文排除项
+**/node_modules
+**/__pycache__
+**/*.pyc
+**/.venv
+**/venv
+**/.git
+frontend/dist
+
+# 运行时数据（不烧进镜像，另由 prepare_data.ps1 打包到 deploy/data_initial）
+backend/db.sqlite3
+backend/chroma
+backend/media
+backend/staticfiles
+
+# 密钥与本地配置：COPY backend/ ./ 会把它们带进镜像，必须排除
+backend/rsa_keys
+**/mcp_server_config.json
+
+# 本地缓存 / 调试残留
+**/.pip-cache
+**/.npm-cache
+backend/_debug_rich.py
+backend/_sample.docx
+backend/_pixel.png
+backend/_out_img
+
+# 宿主运行时数据卷
+deploy/data

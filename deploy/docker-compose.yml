@@ -1,0 +1,69 @@
+services:
+  backend:
+    build:
+      context: ..
+      dockerfile: deploy/backend.Dockerfile
+      args:
+        # 默认 false=轻量远程版（不装 torch，需配 EMBEDDING_MODE=remote 与远程接口）；
+        # 需要离线本地 embedding 时在 .env 设 INSTALL_LOCAL_EMBEDDING=true
+        INSTALL_LOCAL_EMBEDDING: ${INSTALL_LOCAL_EMBEDDING:-false}
+    environment:
+      DJANGO_DEBUG: "0"
+      # 必填：不设置则 compose 直接报错退出，避免用开发默认密钥上线。
+      # 生成方式：python deploy/gen_secret.py
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:?未设置 DJANGO_SECRET_KEY，请先执行 python deploy/gen_secret.py 并写入 .env}
+      # 生产建议改为服务器 IP 或域名；默认 * 便于一键启动
+      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-*}
+      # 必填：该令牌会映射为一个管理员账号，属后门级凭据，绝不能留默认值。
+      # 生成方式：python deploy/gen_secret.py
+      PLATFORM_SERVICE_TOKEN: ${PLATFORM_SERVICE_TOKEN:?未设置 PLATFORM_SERVICE_TOKEN，请先执行 python deploy/gen_secret.py 并写入 .env}
+      DB_PATH: /app/data/db.sqlite3
+      MEDIA_ROOT: /app/data/media
+      CHROMA_DIR: /app/data/chroma
+      STATIC_ROOT: /app/data/staticfiles
+      # 必须 1：多进程并发写 Chroma（sqlite+hnsw）会导致向量库损坏（历史事故）
+      GUNICORN_WORKERS: "1"
+      GUNICORN_TIMEOUT: "600"
+      # 登录 RSA 加密密钥（PEM 落盘到数据卷，跨容器重建持久）
+      RSA_KEYS_DIR: /app/data/keys
+      # 数据库内 API Key 加密主密钥（可选；缺省从 DJANGO_SECRET_KEY 派生）。
+      # 一经使用不可更换，否则旧密文解不开；与登录 SECRET_KEY 独立轮换
+      # PLATFORM_DB_SECRET: "替换为随机长字符串"
+      # 远程 embedding 版（默认形态，INSTALL_LOCAL_EMBEDDING=false）默认 EMBEDDING_MODE=remote，并配置：
+      # LLM_EMBEDDING_BASE_URL / LLM_EMBEDDING_MODEL / LLM_API_KEY（也可在「模型管理」页面里配，仅管理员）
+      EMBEDDING_MODE: ${EMBEDDING_MODE:-remote}
+      LLM_EMBEDDING_BASE_URL: ${LLM_EMBEDDING_BASE_URL:-}
+      LLM_EMBEDDING_MODEL: ${LLM_EMBEDDING_MODEL:-}
+      LLM_API_KEY: ${LLM_API_KEY:-}
+      # 容器系统时区（影响 gunicorn/nginx 日志时间戳与文件时间）
+      TZ: Asia/Shanghai
+    volumes:
+      # 数据卷：首次启动自动灌入镜像内置的初始数据（数据库/向量库/上传文件）
+      - ./data:/app/data
+      # 同步宿主机时区（Linux 服务器）
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import socket; s=socket.create_connection(('127.0.0.1',8000),3); s.close()"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  frontend:
+    build:
+      context: ..
+      dockerfile: deploy/frontend.Dockerfile
+    environment:
+      TZ: Asia/Shanghai
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    volumes:
+      # 与 backend 同一份上传目录，nginx 直接服务 /media/ 下的图片
+      - ./data/media:/usr/share/nginx/media:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro

@@ -1,0 +1,5 @@
+{
+  "PLATFORM_API_URL": "http://127.0.0.1:8000",
+  "PLATFORM_API_TOKEN": "在此填入 Token，见下方说明",
+  "PLATFORM_PROJECT_ID": "1"
+}
