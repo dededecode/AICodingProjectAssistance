@@ -98,7 +98,8 @@ const roleLabel = computed(() => {
   return map[auth.user?.role] || auth.user?.role || "";
 });
 
-// 菜单按 RBAC 资源码过滤：未配置的菜单码默认全放行，启用后按角色分组授权
+// 菜单按 RBAC 资源码过滤（白名单制）：admin 角色与超管全权，其余账号看权限组勾选的码，
+// 未分配权限组时至少保留首页（见 rbac.js 的 hasPerm）
 const visibleMenus = computed(() =>
   MENU_TREE.map((item) => {
     const children = item.children
@@ -110,6 +111,9 @@ const visibleMenus = computed(() =>
 );
 
 onMounted(() => {
+  // 刷新本人信息与权限码：菜单直接依赖这两项，若本地缓存是旧数据（如账号刚被提为超管、
+  // 刚被调整权限组），不刷新会出现「菜单一直是空的」而必须重新登录
+  auth.fetchMe().catch(() => {});
   auth.fetchResources();
   projectStore.ensureLoaded().catch(() => {});
 });

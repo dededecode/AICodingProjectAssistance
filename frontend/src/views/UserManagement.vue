@@ -116,9 +116,9 @@ const roleOpts = [
   { value: "guest", label: "访客" },
 ];
 
-// 系统账号保护：admin 不允许删除/修改（后端同样拦截）
+// 系统账号保护：admin 与超管（createsuperuser 建的账号）不允许删除/修改（后端同样拦截）
 function isProtected(row) {
-  return row?.username === "admin";
+  return row?.username === "admin" || row?.is_superuser === true;
 }
 
 // 权限组选项直接使用库中 name
