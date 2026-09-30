@@ -1475,6 +1475,210 @@ onMounted(async () => {
 .note { margin-top: 10px; background: #eff6ff; border-radius: 6px; padding: 8px 12px; color: #475569; }
 .note.warn { background: #fffbeb; }
 .note ul { margin: 4px 0 0; padding-left: 18px; }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   视觉升级：接入全局设计系统（本节在最后，用于覆盖上方历史配色）
+   仅调整颜色 / 圆角 / 阴影 / 间距，不改动任何布局结构与交互逻辑。
+   ══════════════════════════════════════════════════════════════════════ */
+.overview-page {
+  min-height: auto;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  overflow: visible;
+}
+/* 去掉天空渐变上的云朵装饰（与新的深色品牌横幅不搭） */
+.overview-page::before,
+.overview-page::after {
+  content: none;
+}
+
+.banner {
+  padding: 20px 24px;
+  border-radius: var(--r-lg);
+  color: #fff;
+  background: radial-gradient(600px 260px at 8% 0%, rgba(79, 110, 247, 0.5), transparent 65%),
+    linear-gradient(120deg, #101a2e 0%, #131c33 60%, #0d1626 100%);
+  box-shadow: var(--sh-md);
+}
+.banner h2 {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+  color: #fff;
+}
+.banner p {
+  margin-top: 6px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.map {
+  padding: 30px 24px 20px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  box-shadow: var(--sh-sm);
+}
+.road-segment {
+  height: 6px;
+  margin-top: 32px;
+  background: var(--el-fill-color-dark);
+}
+.road-segment.seg-done {
+  background: var(--grad-brand);
+  box-shadow: none;
+}
+.stage-node .icon {
+  width: 64px;
+  height: 64px;
+  font-size: 30px;
+  border: none;
+  background: #fff;
+  box-shadow: 0 0 0 1px var(--line), var(--sh-sm);
+}
+.stage-node.done .icon {
+  background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+  box-shadow: 0 0 0 1px var(--brand-100), var(--sh-sm);
+}
+.stage-node.active .icon {
+  background-image: var(--grad-brand);
+  box-shadow: 0 14px 28px -14px rgba(79, 110, 247, 0.95);
+  animation: none;
+}
+.stage-node.todo .icon {
+  background: var(--el-fill-color-light);
+  filter: grayscale(1);
+  opacity: 0.7;
+}
+.stage-node .label {
+  margin-top: 9px;
+  font-size: 13.5px;
+  font-weight: 650;
+  color: var(--ink-800);
+}
+.stage-node .state-text {
+  color: var(--ink-300);
+}
+.cheer .bubble {
+  border-color: var(--brand-500);
+  color: var(--brand-600);
+  box-shadow: var(--sh-sm);
+}
+.cheer .bubble::after {
+  border-top-color: var(--brand-500);
+}
+.legend {
+  margin-top: 24px;
+}
+.legend span {
+  color: var(--ink-400);
+}
+.dot.done {
+  background: var(--brand-500);
+}
+.dot.active {
+  background: var(--warn-500);
+}
+.dot.todo {
+  background: var(--ink-200);
+}
+
+.workbench {
+  margin-top: 16px;
+  padding: 18px 22px 20px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  box-shadow: var(--sh-sm);
+}
+.wb-head {
+  font-size: 15px;
+  font-weight: 650;
+  color: var(--ink-800);
+}
+.wb-stats .stat {
+  border-radius: var(--r-sm);
+  border: 1px solid var(--brand-100);
+  background: var(--brand-50);
+}
+.wb-stats .stat b {
+  color: var(--brand-600);
+}
+.wb-stats.metric .stat {
+  border-color: #ede9fe;
+  background: #faf5ff;
+}
+.wb-stats.metric .stat b {
+  color: #7c3aed;
+}
+.hint {
+  color: var(--ink-300);
+}
+
+/* 甘特图：仅统一描边与文字层级 */
+.gantt-scroll {
+  border-color: var(--line);
+  border-radius: var(--r-sm);
+}
+.g-axis {
+  background: var(--bg-soft);
+  border-bottom-color: var(--line);
+}
+.g-month {
+  color: var(--ink-500);
+  border-right-color: var(--line);
+}
+.g-day {
+  border-right-color: var(--line);
+}
+.g-row {
+  border-bottom-color: var(--line);
+}
+.g-label {
+  background: #fcfdff;
+  border-right-color: var(--line);
+}
+.g-title {
+  color: var(--ink-700);
+}
+.gantt-scale {
+  color: var(--brand-600);
+  background: var(--brand-50);
+}
+.gantt-hint {
+  color: var(--ink-300);
+}
+
+.summary-cards .card {
+  border-radius: var(--r-md);
+  border: 1px solid var(--brand-100);
+  background: var(--grad-soft);
+  box-shadow: var(--sh-sm);
+}
+.summary-cards .card .num {
+  color: var(--brand-600);
+}
+.summary-cards .card .lbl {
+  color: var(--ink-400);
+}
+
+.preview-text {
+  border-radius: var(--r-sm);
+  background: var(--bg-soft);
+}
+.note {
+  border-radius: var(--r-sm);
+  background: var(--brand-50);
+  border: 1px solid var(--brand-100);
+}
+.note.warn {
+  background: #fffbeb;
+  border-color: #fde68a;
+}
+.analysis-head .item {
+  color: var(--ink-500);
+}
 </style>
 
 <style>
