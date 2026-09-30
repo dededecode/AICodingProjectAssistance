@@ -8,6 +8,19 @@ AI coding 开发项目全流程辅助、项目管理平台。覆盖 **需求分�
 
 ---
 
+## 界面预览
+
+登录页与首页（AI 工作台）：
+
+| 登录页 | 首页 · AI 工作台 |
+|:---:|:---:|
+| ![登录页](docs/images/login.png) | ![首页](docs/images/dashboard.png) |
+
+项目概览 —— 项目全流程地图，点击任一阶段即可进入该环节的工作台：
+
+![项目概览](docs/images/project-overview.png)
+![项目概览](docs/images/project-overview2.png)
+
 ## 特性
 
 - **全流程闭环**：需求 → 计划 → 架构 → 开发 → 交付 → 运营，各阶段有前置条件校验，确认后自动流转到下一阶段。
@@ -42,7 +55,9 @@ AICodingProjectAssistance/
 │   ├── mcp_server.py
 │   └── mcp_server_config.example.json   # 配置模板（复制为 mcp_server_config.json 使用）
 ├── deploy/                     # Docker 编排、Dockerfile、nginx、数据打包脚本
-└── docs/系统操作手册.md         # 页面操作与 MCP 使用说明
+└── docs/                       # 文档
+    ├── 系统操作手册.md          # 页面操作与 MCP 使用说明
+    └── images/                 # README 界面截图（login / dashboard / project-overview）
 ```
 
 ## 快速开始

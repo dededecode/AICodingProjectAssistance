@@ -10,6 +10,20 @@ A platform for end-to-end assistance and project management of AI coding project
 
 ---
 
+## Screenshots
+
+Login page and home (AI workbench):
+
+| Login | Home · AI workbench |
+|:---:|:---:|
+| ![Login](docs/images/login.png) | ![Home](docs/images/dashboard.png) |
+
+Project overview — the project lifecycle map; click any stage to open its workbench:
+
+![Project overview](docs/images/project-overview.png)
+
+> Screenshots are rendered from synthetic demo data created by `python manage.py seed_demo`; see [docs/images/README.md](docs/images/README.md) for how to replace them.
+
 ## Features
 
 - **Full lifecycle**: requirement → planning → architecture → development → delivery → operations, with precondition checks between stages and automatic stage transitions.
@@ -44,7 +58,9 @@ AICodingProjectAssistance/
 │   ├── mcp_server.py
 │   └── mcp_server_config.example.json   # config template (copy to mcp_server_config.json)
 ├── deploy/                     # Docker compose, Dockerfiles, nginx, data packaging script
-└── docs/系统操作手册.md         # page-by-page and MCP handbook (Chinese)
+└── docs/                       # documentation
+    ├── 系统操作手册.md          # page-by-page and MCP handbook (Chinese)
+    └── images/                 # README screenshots (login / dashboard / project-overview)
 ```
 
 ## Quick Start
